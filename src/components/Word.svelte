@@ -1,18 +1,19 @@
-<script>
+<script lang="ts">
     import Letter from '../components/Letter.svelte'
 
-    export let currentGuess
+    export let currentGuess: string[]
 
-    $: word = currentGuess
+    currentGuess = currentGuess
 
-    console.log("word desde Word:", word)
 </script>
 
 <div class="flex">
     {#each Array(5) as _, i }
-        <Letter {word} letterIndex={i} />
+        <Letter {currentGuess} letterIndex={i} />
     {/each}
 </div>
+
+<p> {currentGuess} </p>
 
 
 
