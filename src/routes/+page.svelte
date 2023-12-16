@@ -2,8 +2,9 @@
     import Word from "../components/Word.svelte";
 
     let currentGuess: string[] = []
+    let currentGuessIndex: number = 0
     let userGuesses: string[][] = []
-    let boardIndex: number = 0
+    const voidWord: string[] = ["", "", "", "", ""]
 
     const handleKeydown = (e: KeyboardEvent) => {
         const {key} = e
@@ -16,23 +17,27 @@
             currentGuess = [...currentGuess, letter]
         } else if (e.code === "Enter" && currentGuess.length < 5) {
             //Alert: Not enought letters
-            console.log("La palabra debe tener 5 letas")
         } else if (e.code === "Enter") {
             //Check word and update boardIndex
             userGuesses = [...userGuesses, currentGuess]
             currentGuess = []
-            boardIndex += 1
-            console.log("Cheking word...")
-            console.log(userGuesses)
-            console.log(boardIndex)
+            currentGuessIndex += 1
         }
-        console.log(currentGuess)
     }
 
+    console.log(currentGuessIndex)
 </script>
 
 <svelte:window on:keydown={handleKeydown}/>
 
-{#each Array(6) as _, i}
-    <Word {currentGuess} />
-{/each}
+<div class="">
+    {#each Array(6) as _, i}
+        {#if i === currentGuessIndex}
+            <Word printedWord={currentGuess} />
+        {:else if i < currentGuessIndex}
+            <Word printedWord={userGuesses[i]} />
+        {:else}
+            <Word printedWord={voidWord} />
+        {/if}
+    {/each}
+</div>
