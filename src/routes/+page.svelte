@@ -1,6 +1,13 @@
 <script lang="ts">
-    import Word from "../components/Word.svelte";
+    import Word from "../components/Word.svelte"
+    import { correctWords } from "$lib/correctWord";
+    import { correctWord } from "$lib/correctWordStore"
+	import { onMount } from "svelte";
 
+
+    type State = 'start' | 'playing' | 'won' | 'lost'
+
+    let state = 'start'
     let currentGuess: string[] = []
     let currentGuessIndex: number = 0
     let userGuesses: string[][] = []
@@ -25,19 +32,42 @@
         }
     }
 
-    console.log(currentGuessIndex)
+    function getRandomInt(max: number) {
+        return Math.floor(Math.random() * max);
+    }
+
+    function updateCorrectWord() {
+        let correctWordId : number = getRandomInt(correctWords.length)
+        $correctWord = correctWords[correctWordId]
+        console.log($correctWord)
+    }
+
+    onMount( 
+        () => updateCorrectWord()
+    )
 </script>
 
 <svelte:window on:keydown={handleKeydown}/>
+<div class="flex flex-col">
+    <h1 class="text-white text-5xl font-bold my-10 "> Wordle en Español</h1>
 
-<div class="">
-    {#each Array(6) as _, i}
-        {#if i === currentGuessIndex}
-            <Word printedWord={currentGuess} />
-        {:else if i < currentGuessIndex}
-            <Word printedWord={userGuesses[i]} />
-        {:else}
-            <Word printedWord={voidWord} />
-        {/if}
-    {/each}
+    <div class="">
+        {#each Array(6) as _, i}
+            {#if i === currentGuessIndex}
+                <Word printedWord={currentGuess} />
+            {:else if i < currentGuessIndex}
+                <Word printedWord={userGuesses[i]} validate={true}/>
+            {:else}
+                <Word printedWord={voidWord} />
+            {/if}
+        {/each}
+    </div>
+
+    <div>
+        <!--Resultados-->
+    </div>
+
+    <div>
+        <!--Teclado-->
+    </div>
 </div>

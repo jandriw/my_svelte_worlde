@@ -2,16 +2,18 @@
     import Letter from '../components/Letter.svelte'
 
     export let printedWord: string[]
-    //export let debugIndex: number
+    export let validate: boolean = false
 
 </script>
 
-<div class="flex">
+
+
+<div class="flex mb-2">
     {#each Array(5) as _, i }
-        <Letter {printedWord} letterIndex={i} />
+        <Letter {printedWord} letterIndex={i} {validate} />
     {/each}
 
-    <!--<p class="text-gray-500 text-2xl">{debugIndex}</p>-->
+    <!--<p class="text-gray-500 text-2xl">{validate}</p>-->
     
 </div>
 
