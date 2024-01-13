@@ -61,6 +61,16 @@
     $: lastWord === $correctWord.toUpperCase() && gameWon()
     $: currentGuessIndex >= 6 && lastWord !== $correctWord.toUpperCase() && gameLost()
 
+    $: stateBg = () => {
+        if ( state === 'won') {
+            return "bg-green-200 border-4 border-green-500"
+        } else if ( state === 'lost') {
+            return "bg-red-200 border-4 border-red-500"
+        } else {
+            return "bg-transparent"
+        }
+    }
+
 
 
 </script>
@@ -76,7 +86,7 @@
 {:else}
 
 <div class="flex flex-col">
-    <h1 class="text-white text-5xl font-bold my-10 m-auto"> Wordle en Español</h1>
+    <h1 class="text-white text-4xl font-bold my-10 m-auto"> Wordle en Español</h1>
 
     <div class="m-auto">
         {#each Array(6) as _, i}
@@ -90,18 +100,21 @@
         {/each}
     </div>
 
-    <div class="m-auto">
+    <div class="m-auto h-24 w-96 {stateBg()} rounded-md flex justify-center content-center">
         <!--Resultados-->
-        {#if state === 'won'}
-            <h1 class="text-white text-3xl font-bold my-10 m-auto"> 🎉 !!Has Ganado!! 🎉 </h1>
-        {:else if state === 'lost'}
-            <h1 class="text-white text-3xl font-bold my-10 m-auto"> 💩 Has Perdido... 💩 </h1>
-            <h1 class="text-white text-3xl font-bold my-10 m-auto"> La palabra secreta era "{$correctWord}" </h1>
-        {/if}
+            {#if state === 'won'}
+                <h1 class="text-green-500 text-2xl font-bold m-auto"> 🎉 !!Has Ganado!! 🎉 </h1>
+            {:else if state === 'lost'}
+                <div class="m-auto">
+                <h1 class="text-red-500 text-2xl font-bold"> 💩 Has Perdido... 💩 </h1>
+                <h1 class="text-red-500 text-2xl font-bold"> Palabra correcta: "{$correctWord}" </h1>
+                </div>
+            {/if}
     </div>
 
     <div class="m-auto">
         <!--Teclado-->
+        <h1 class="text-white text-3xl font-bold my-5 m-auto"> Teclado </h1>
     </div>
 </div>
 
