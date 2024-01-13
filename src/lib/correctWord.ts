@@ -62,6 +62,9 @@ export const correctWords: string[] = [
     'Arena',
     'Palma',
     'Cesta',
-    'Viena'
+    'Viena',
+    'Venda',
+    'Miedo',
+    'Bario'
   ];
   

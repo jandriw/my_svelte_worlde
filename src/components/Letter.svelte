@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { correctWord } from "$lib/correctWordStore";
+    import { correctWord } from "$lib/correctWordStore"
+    import { fade } from 'svelte/transition'
 
     export let printedWord: string []
     export let letterIndex: number
