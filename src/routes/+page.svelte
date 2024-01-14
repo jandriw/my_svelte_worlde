@@ -1,9 +1,9 @@
 <script lang="ts">
     import Word from "../components/Word.svelte"
+    import Keyboard from "../components/Keyboard.svelte"
     import { correctWords } from "$lib/correctWord"
     import { correctWord } from "$lib/correctWordStore"
 	import { onMount } from "svelte"
-
 
     type State = 'start' | 'playing' | 'won' | 'lost'
 
@@ -71,18 +71,13 @@
         }
     }
 
-
-
 </script>
 
 <svelte:window on:keydown={handleKeydown}/>
 
 {#if state === 'start'}
-
-        <h1 class="flex justify-center text-white font-bold text-6xl mt-36 mb-10">Wordle en Español</h1>
-        <button class="flex m-auto text-white font-bold text-3xl bg-blue-500 rounded-md hover:bg-blue-400 px-5 py-1" on:click={() => state = 'playing'}>Empezar 🎉</button>
-
-
+    <h1 class="flex justify-center text-white font-bold text-6xl mt-36 mb-10">Wordle en Español</h1>
+    <button class="flex m-auto text-white font-bold text-3xl bg-blue-500 rounded-md hover:bg-blue-400 px-5 py-1" on:click={() => state = 'playing'}>Empezar 🎉</button>
 {:else}
 
 <div class="flex flex-col">
@@ -102,19 +97,18 @@
 
     <div class="m-auto h-24 w-96 {stateBg()} rounded-md flex justify-center content-center">
         <!--Resultados-->
-            {#if state === 'won'}
-                <h1 class="text-green-500 text-2xl font-bold m-auto"> 🎉 !!Has Ganado!! 🎉 </h1>
-            {:else if state === 'lost'}
-                <div class="m-auto">
+        {#if state === 'won'}
+            <h1 class="text-green-500 text-2xl font-bold m-auto"> 🎉 !!Has Ganado!! 🎉 </h1>
+        {:else if state === 'lost'}
+            <div class="m-auto">
                 <h1 class="text-red-500 text-2xl font-bold"> 💩 Has Perdido... 💩 </h1>
                 <h1 class="text-red-500 text-2xl font-bold"> Palabra correcta: "{$correctWord}" </h1>
-                </div>
-            {/if}
+            </div>
+        {/if}
     </div>
 
     <div class="m-auto">
-        <!--Teclado-->
-        <h1 class="text-white text-3xl font-bold my-5 m-auto"> Teclado </h1>
+        <Keyboard />
     </div>
 </div>
 

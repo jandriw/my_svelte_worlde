@@ -23,7 +23,7 @@
 
 </script>
 
-<div class="h-16 w-16 {validateBg()} border-[3px] rounded-md border-yellow-50 text-white font-black text-5xl flex items-center justify-center leading-none m-1">
+<div class="h-14 w-14 {validateBg()} border-[3px] rounded-md border-yellow-50 text-white font-black text-4xl flex items-center justify-center leading-none m-1">
     {#if printedWord[letterIndex] === undefined}
         {voidSpot}
     {:else}
