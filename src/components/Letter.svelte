@@ -1,12 +1,11 @@
 <script lang="ts">
     import { correctWord } from "$lib/correctWordStore"
-    import { fade } from 'svelte/transition'
+    
 
     export let printedWord: string []
     export let letterIndex: number
     export let validate: boolean
 
-    
     $: validateBg = () => {
         if ( validate && $correctWord[letterIndex].toUpperCase() === printedWord[letterIndex]) {
             return "bg-green-500"

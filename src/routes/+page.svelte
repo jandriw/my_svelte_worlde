@@ -3,9 +3,16 @@
     import Keyboard from "../components/Keyboard.svelte"
     import { correctWords } from "$lib/correctWord"
     import { correctWord } from "$lib/correctWordStore"
+    import { correctLetters, includedLetters, notIncludedLetters } from "$lib/Alphabet"
 	import { onMount } from "svelte"
 
     type State = 'start' | 'playing' | 'won' | 'lost'
+
+    type CheckResult = {
+        correctLetter: string[];
+        includedLetter: string[];
+        notIncludedLetter: string[];
+    }
 
     let state: State = 'start'
     let currentGuess: string[] = []
@@ -13,6 +20,32 @@
     let userGuesses: string[][] = []
     let lastWord: string = ''
     const voidWord: string[] = ["", "", "", "", ""]
+
+    function checkWord(): CheckResult {
+        const correctLetter = new Set<string>()
+        const includedLetter = new Set<string>()
+        const notIncludedLetter = new Set<string>()
+
+        for (let i = 0; i < 5; i++) {
+            const checkLetter = $correctWord[i].toUpperCase()
+            const tryLetter = lastWord[i]
+
+            if (checkLetter === tryLetter) {
+                correctLetter.add(tryLetter)
+            } else if ($correctWord.toUpperCase().includes(tryLetter)) {
+                includedLetter.add(tryLetter)
+            } else {
+                notIncludedLetter.add(tryLetter)
+            }
+        }
+
+        return {
+                correctLetter: Array.from(correctLetter),
+                includedLetter: Array.from(includedLetter),
+                notIncludedLetter: Array.from(notIncludedLetter)
+        }
+        
+    }
 
     const handleKeydown = (e: KeyboardEvent) => {
         const {key} = e
@@ -29,6 +62,13 @@
             //Check word and update boardIndex
             userGuesses = [...userGuesses, currentGuess]
             lastWord = currentGuess.join("").toUpperCase()
+            let checked = checkWord()
+            
+            if (checked) {
+                correctLetters.update(() => checked.correctLetter)
+                includedLetters.update(() => checked.includedLetter)
+                notIncludedLetters.update((value) => [...value, ...checked.notIncludedLetter])
+            }
             currentGuess = []
             currentGuessIndex += 1
         }
@@ -56,6 +96,12 @@
     function gameLost() {
         state = 'lost'
         console.log(state)
+    }
+
+    $: {
+        console.log($correctLetters)
+        console.log($includedLetters)
+        console.log($notIncludedLetters)
     }
 
     $: lastWord === $correctWord.toUpperCase() && gameWon()
