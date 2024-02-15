@@ -2,9 +2,10 @@
     import Word from "../components/Word.svelte"
     import Keyboard from "../components/Keyboard.svelte"
     import { correctWords } from "$lib/correctWord"
-    import { correctWord } from "$lib/correctWordStore"
+    import { correctWord, userGuessWord } from "$lib/correctWordStore"
     import { correctLetters, includedLetters, notIncludedLetters } from "$lib/Alphabet"
 	import { onMount } from "svelte"
+    import { setContext } from "svelte"
 
     type State = 'start' | 'playing' | 'won' | 'lost'
 
@@ -51,28 +52,49 @@
         const {key} = e
 
         if (e.code === "Backspace") {
-            currentGuess.pop()
-            currentGuess = currentGuess
+            backspacePressed()
         } else if (e.key.length === 1 && e.key.match(/[a-z]/i) && currentGuess.length < 5) {
             let letter = e.key.toUpperCase()
             currentGuess = [...currentGuess, letter]
+            userGuessWord.update(() => currentGuess)
         } else if (e.code === "Enter" && currentGuess.length < 5) {
-            //Alert: Not enought letters
-        } else if (e.code === "Enter") {
-            //Check word and update boardIndex
-            userGuesses = [...userGuesses, currentGuess]
-            lastWord = currentGuess.join("").toUpperCase()
-            let checked = checkWord()
-            
-            if (checked) {
-                correctLetters.update(() => checked.correctLetter)
-                includedLetters.update(() => checked.includedLetter)
-                notIncludedLetters.update((value) => [...value, ...checked.notIncludedLetter])
-            }
-            currentGuess = []
-            currentGuessIndex += 1
+            console.log("la palabra debe tener 4 letras")
+        } else if (e.code === "Enter" && currentGuess.length > 4) {
+            enterPressed()
         }
     }
+
+    function updateUserGuessWord() {
+        currentGuess = $userGuessWord
+    }
+
+    setContext('updateUserGuessWord', updateUserGuessWord)
+
+    function backspacePressed(): void {
+        currentGuess.pop()
+        currentGuess = currentGuess       
+    }
+
+    setContext('backspacePressed', backspacePressed)
+
+    function enterPressed(): void {
+        //Check word and update boardIndex
+        userGuesses = [...userGuesses, currentGuess]
+        lastWord = currentGuess.join("").toUpperCase()
+        let checked = checkWord()
+            
+        if (checked) {
+            correctLetters.update(() => checked.correctLetter)
+            includedLetters.update(() => checked.includedLetter)
+            notIncludedLetters.update((value) => [...value, ...checked.notIncludedLetter])
+        }
+        
+        currentGuess = []
+        userGuessWord.update(() => [])
+        currentGuessIndex += 1
+    }
+
+    setContext('enterPressed', enterPressed)
 
     function getRandomInt(max: number) {
         return Math.floor(Math.random() * max);
@@ -90,18 +112,14 @@
 
     function gameWon() {
         state = 'won'
-        console.log(state)
     }
 
     function gameLost() {
         state = 'lost'
-        console.log(state)
     }
 
     $: {
-        console.log($correctLetters)
-        console.log($includedLetters)
-        console.log($notIncludedLetters)
+        console.log($userGuessWord)
     }
 
     $: lastWord === $correctWord.toUpperCase() && gameWon()
@@ -148,7 +166,7 @@
         {:else if state === 'lost'}
             <div class="m-auto">
                 <h1 class="text-red-500 text-2xl font-bold"> 💩 Has Perdido... 💩 </h1>
-                <h1 class="text-red-500 text-2xl font-bold"> Palabra correcta: "{$correctWord}" </h1>
+                <h1 class="text-red-500 text-2xl font-bold"> Buscabas: "{$correctWord}" </h1>
             </div>
         {/if}
     </div>

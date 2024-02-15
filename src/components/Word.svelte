@@ -17,8 +17,6 @@
             <Letter {printedWord} letterIndex={i} {validate} />
         </div>
     {/each}
-
-    <!--<p class="text-gray-500 text-2xl">{validate}</p>-->
     
 </div>
 
